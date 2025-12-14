@@ -1,0 +1,7 @@
+project_id = "liampuerynpelwasynin"
+
+[functions.send-email]
+verify_jwt = false
+
+[functions.auth-email-hook]
+verify_jwt = false

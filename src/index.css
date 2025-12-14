@@ -1,0 +1,310 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Brand text gradient */
+.text-brand-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(280, 100%, 60%) 50%, hsl(200, 100%, 50%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 5% 6%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 5% 6%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 5% 6%;
+
+    --primary: 270 60% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --brand-primary: 240 5% 98%;
+    --brand-primary-foreground: 240 5% 6%;
+
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 5% 6%;
+
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 5% 6%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 270 60% 60%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar: 0 0% 98%;
+    --sidebar-foreground: 240 5% 26%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 5% 6%;
+    --sidebar-border: 240 6% 90%;
+
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(240 5% 98%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(270 60% 60%) 0%, hsl(270 60% 70%) 100%);
+    
+    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.05);
+    --shadow-medium: 0 4px 12px 0 hsl(0 0% 0% / 0.08);
+    --shadow-strong: 0 8px 24px 0 hsl(0 0% 0% / 0.12);
+    
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 240 6% 6%;
+    --foreground: 240 5% 90%;
+
+    --card: 240 4% 9%;
+    --card-foreground: 240 5% 96%;
+
+    --popover: 240 5% 10%;
+    --popover-foreground: 240 5% 96%;
+
+    --primary: 270 60% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --brand-primary: 240 4% 20%;
+    --brand-primary-foreground: 240 5% 96%;
+
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 240 5% 96%;
+
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+
+    --accent: 240 4% 16%;
+    --accent-foreground: 240 5% 96%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 270 60% 65%;
+
+    /* Success/Ready state colors */
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+
+    /* Sidebar */
+    --sidebar: 240 6% 10%;
+    --sidebar-foreground: 240 5% 90%;
+    --sidebar-accent: 240 4% 16%;
+    --sidebar-accent-foreground: 240 5% 96%;
+    --sidebar-border: 240 4% 16%;
+
+    --gradient-subtle: linear-gradient(180deg, hsl(240 6% 6%) 0%, hsl(240 6% 8%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(270 60% 65%) 0%, hsl(270 60% 75%) 100%);
+    
+    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 4px 12px 0 hsl(0 0% 0% / 0.4);
+    --shadow-strong: 0 8px 24px 0 hsl(0 0% 0% / 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+  }
+
+  /* Waitlist grid background - adapts to theme */
+  .grid-bg {
+    background-size: 50px 50px;
+    background-image: 
+      linear-gradient(to right, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  }
+
+  /* Hero grid background */
+  .hero-grid-bg {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
+  }
+
+  /* Hero glow effect - adapts to theme */
+  .hero-glow {
+    background: radial-gradient(circle at 50% 0%, hsl(var(--primary) / 0.15) 0%, transparent 70%);
+  }
+
+  /* Glass effect for navigation */
+  .glass-effect {
+    background: hsl(0 0% 4% / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Carousel mask (fade edges) */
+  .carousel-mask {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+
+  /* Text gradient purple */
+  .text-gradient-purple {
+    background: linear-gradient(to right, hsl(280 80% 70%), hsl(240 80% 70%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Button shine effect */
+  .btn-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.2), transparent);
+    transition: 0.5s;
+  }
+  .btn-shine:hover::after {
+    left: 100%;
+  }
+
+  /* Pause animation on hover */
+  .pause:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Prose customizations for better list formatting */
+@layer base {
+  .prose ol > li::marker {
+    font-weight: 600;
+  }
+  
+  .prose ol > li,
+  .prose ul > li {
+    padding-left: 0.5rem;
+  }
+  
+  .prose ol,
+  .prose ul {
+    padding-left: 1.5rem;
+  }
+  
+  /* Add spacing before paragraphs that start with bold text (often used as inline titles) */
+  .prose p:has(> strong:first-child) {
+    margin-top: 1.5rem;
+  }
+  
+  .prose p:has(> strong:first-child):first-child {
+    margin-top: 0;
+  }
+
+  /* Custom scrollbar styles */
+  .chat-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .chat-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .chat-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+
+  .chat-scroll::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  .dark .chat-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+  }
+
+  .dark .chat-scroll::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.6);
+  }
+
+  /* Firefox scrollbar */
+  .chat-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .dark .chat-scroll {
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  /* Textarea scrollbar styles */
+  .textarea-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .textarea-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .textarea-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+
+  .textarea-scroll::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  .dark .textarea-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+  }
+
+  .dark .textarea-scroll::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.6);
+  }
+
+  /* Firefox scrollbar for textarea */
+  .textarea-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .dark .textarea-scroll {
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+}
