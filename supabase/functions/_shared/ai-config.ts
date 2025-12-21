@@ -10,7 +10,7 @@
 export type AIProvider = 'lovable-ai' | 'openai' | 'gemini';
 
 // ⚙️ CHANGE THIS TO SWITCH PROVIDERS
-export const AI_PROVIDER: AIProvider = 'gemini';
+export const AI_PROVIDER: AIProvider = 'openai';
 
 // Provider configurations
 export const PROVIDER_CONFIG = {

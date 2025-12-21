@@ -194,6 +194,13 @@ const ProjectDocuments = () => {
 
       if (analysesError) throw analysesError;
       setAnalyses(analysesData || []);
+
+      // Auto-select the tab with content: if no documents but has analyses, show analyses
+      if ((!phases || phases.length === 0) && analysesData && analysesData.length > 0) {
+        setActiveTab('analyses');
+      } else if (phases && phases.length > 0) {
+        setActiveTab('documents');
+      }
     } catch (error: any) {
       console.error('Error loading documents:', error);
       toast.error('Failed to load documents', {
@@ -869,13 +876,13 @@ const ProjectDocuments = () => {
             <span>Back</span>
           </button>
 
-          {documents.length === 0 ? (
+          {documents.length === 0 && analyses.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
                 <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-semibold mb-2">No documents generated yet</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Complete phases in Mission Control to generate documentation
+                  Complete phases and analyses in Mission Control to generate documentation
                 </p>
                 <Button onClick={() => navigate(`/mission-control/${projectId}`)}>
                   Go to Mission Control
@@ -1004,7 +1011,32 @@ const ProjectDocuments = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody className="text-sm divide-y divide-border">
-                      {documents.map((doc) => {
+                      {documents.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="py-12 text-center">
+                            <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                            <h3 className="text-lg font-semibold mb-2">No phase documents yet</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              {analyses.length > 0 
+                                ? "Complete phases in Mission Control or check the Analyses tab for saved analyses"
+                                : "Complete phases in Mission Control to generate documentation"
+                              }
+                            </p>
+                            {analyses.length > 0 && (
+                              <Button 
+                                variant="outline" 
+                                onClick={() => setActiveTab('analyses')}
+                                className="mr-2"
+                              >
+                                View Analyses ({analyses.length})
+                              </Button>
+                            )}
+                            <Button onClick={() => navigate(`/mission-control/${projectId}`)}>
+                              Go to Mission Control
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ) : documents.map((doc) => {
                         const Icon = getDocumentIcon(doc.phase_type);
                         const status = getDocumentStatus(doc.phase_type);
                         const isBacklog = doc.phase_type === 'backlog';

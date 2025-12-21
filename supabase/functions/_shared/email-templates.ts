@@ -422,7 +422,7 @@ export const waitlistEmail = (options: WaitlistEmailOptions): string => {
   const content = `
     <div class="content">
       <p>Hello!</p>
-      <p>Thank you for joining the <span class="text-gradient">SpecMaster</span> waitlist! We're excited to have you with us.</p>
+      <p>We're excited to have you with us! Get ready to experience the power of <span class="text-gradient">SpecMaster</span>.</p>
       
       ${position ? `
         <div class="success-box">

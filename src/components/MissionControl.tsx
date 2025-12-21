@@ -25,7 +25,7 @@ import {
   ArrowLeft, Lightbulb, RefreshCw, ChevronDown, ChevronUp, 
   ArrowUp, ArrowDown, PanelLeft, MoreHorizontal, RotateCcw, 
   Download, Target, Users, Lock, AlertCircle, ArrowRight,
-  BarChart3, X, PanelRight, Crown
+  BarChart3, X, PanelRight, Crown, BookOpen
 } from "lucide-react";
 import { useAgentChat, AgentType, Message } from "@/features/agents";
 import { MarkdownContent } from "@/components/MarkdownContent";
@@ -868,18 +868,25 @@ const MissionControl = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* View Documents Button */}
-            {savedPhases.size > 0 && (
-              <button 
-                onClick={() => navigate(`/project-documents/${projectId}`)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border/50 transition-all"
-              >
-                <FileText className="w-4 h-4" />
-                <span className="hidden sm:inline">View Documents</span>
-              </button>
-            )}
+            {/* Documentation Link - Show when there are saved phases OR analyses */}
+            {(savedPhases.size > 0 || savedAnalyses.size > 0) && (
+              <>
+                <button 
+                  onClick={() => navigate(`/project-documents/${projectId}`)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border/50 transition-all"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span className="hidden sm:inline">Documentation</span>
+                  {(savedPhases.size + savedAnalyses.size) > 0 && (
+                    <span className="ml-1 bg-primary/20 px-1.5 rounded text-[10px] font-medium">
+                      {savedPhases.size + savedAnalyses.size}
+                    </span>
+                  )}
+                </button>
 
-            <div className="h-4 w-px bg-border/50 mx-1" />
+                <div className="h-4 w-px bg-border/50 mx-1" />
+              </>
+            )}
 
             {/* Analysis Panel Toggle */}
             <button 
