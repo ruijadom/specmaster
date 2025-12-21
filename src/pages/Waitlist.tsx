@@ -168,7 +168,7 @@ const Waitlist = () => {
       } else {
         // Send confirmation email
         try {
-          await supabase.functions.invoke('send-email', {
+          const { data: emailData, error: emailError } = await supabase.functions.invoke('send-email', {
             body: {
               to: email,
               subject: 'You\'re on the SpecMaster Waitlist! 🎉',
@@ -178,16 +178,32 @@ const Waitlist = () => {
               }
             }
           });
+
+          if (emailError) {
+            console.error("Error sending waitlist email:", emailError);
+            toast({
+              title: "Warning",
+              description: "You've been added to the waitlist, but we couldn't send the confirmation email. Please check your spam folder.",
+              variant: "default",
+            });
+          } else {
+            console.log("Waitlist email sent successfully:", emailData);
+            toast({
+              title: "Success!",
+              description: "You've been added to the waitlist. Check your email!",
+            });
+          }
         } catch (emailError) {
           console.error("Error sending waitlist email:", emailError);
+          toast({
+            title: "Warning",
+            description: "You've been added to the waitlist, but we couldn't send the confirmation email.",
+            variant: "default",
+          });
         }
 
         setIsSuccess(true);
         setEmail("");
-        toast({
-          title: "Success!",
-          description: "You've been added to the waitlist.",
-        });
       }
     } catch (error) {
       console.error("Error joining waitlist:", error);

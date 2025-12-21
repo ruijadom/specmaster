@@ -78,21 +78,46 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("RESEND_API_KEY is not configured");
     }
 
-    const response = await fetch("https://api.resend.com/emails", {
+    // Try with custom domain first, fallback to resend.dev
+    const emailFrom = from || "SpecMaster <noreply@notifications.specmaster.app>";
+    const fallbackFrom = "SpecMaster <onboarding@resend.dev>";
+
+    let response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: from || "SpecMaster <onboarding@resend.dev>",
+        from: emailFrom,
         to: Array.isArray(to) ? to : [to],
         subject,
         html: emailHtml,
       }),
     });
 
-    const emailResponse = await response.json();
+    let emailResponse = await response.json();
+
+    // If 403 (likely domain not verified), retry with fallback domain
+    if (response.status === 403) {
+      console.warn(`Failed with custom domain (${emailFrom}), trying fallback domain...`);
+      
+      response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: fallbackFrom,
+          to: Array.isArray(to) ? to : [to],
+          subject,
+          html: emailHtml,
+        }),
+      });
+      
+      emailResponse = await response.json();
+    }
 
     if (!response.ok) {
       console.error("Resend API error:", emailResponse);
