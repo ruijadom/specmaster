@@ -152,7 +152,7 @@ serve(async (req) => {
     
     console.log("Sending email via Resend...");
     const { error } = await resend.emails.send({
-      from: "SpecMaster <onboarding@resend.dev>",
+      from: "SpecMaster <noreply@notifications.specmaster.app>",
       to: [user.email],
       subject: "Confirm Your Email - SpecMaster",
       html: html,
