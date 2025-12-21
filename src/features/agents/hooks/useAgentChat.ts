@@ -14,6 +14,7 @@ export const useAgentChat = ({ projectId, onMessageSent }: UseAgentChatOptions) 
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentAgent, setCurrentAgent] = useState<AgentType>('ba');
   const [isLoading, setIsLoading] = useState(true);
+  const [rateLimitedUntil, setRateLimitedUntil] = useState<Date | null>(null);
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -143,7 +144,24 @@ export const useAgentChat = ({ projectId, onMessageSent }: UseAgentChatOptions) 
       return assistantContent || null;
     } catch (error) {
       console.error('Error sending message:', error);
-      toast.error('Failed to communicate with agent. Please try again.');
+      
+      // Show specific error message if available
+      const errorMessage = error instanceof Error ? error.message : 'Failed to communicate with agent. Please try again.';
+      
+      // If it's a rate limit error, set the cooldown timer
+      if (errorMessage.includes('Rate limit exceeded') || errorMessage.includes('rate limit')) {
+        const waitSeconds = errorMessage.match(/(\d+)\s*seconds?/)?.[1];
+        const waitTime = waitSeconds ? parseInt(waitSeconds) : 60;
+        const retryTime = new Date(Date.now() + waitTime * 1000);
+        setRateLimitedUntil(retryTime);
+        
+        toast.error(`${errorMessage}\nYou can retry at ${retryTime.toLocaleTimeString()}`, {
+          duration: waitTime * 1000,
+        });
+      } else {
+        toast.error(errorMessage);
+      }
+      
       return null;
     } finally {
       setIsProcessing(false);
@@ -183,5 +201,7 @@ export const useAgentChat = ({ projectId, onMessageSent }: UseAgentChatOptions) 
     clearMessages,
     reloadMessages,
     setCurrentAgent,
+    rateLimitedUntil,
+    isRateLimited: rateLimitedUntil ? rateLimitedUntil > new Date() : false,
   };
 };

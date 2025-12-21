@@ -44,6 +44,73 @@ serve(async (req) => {
 
     console.log('User authenticated:', userData.user.id);
 
+    // Create service role client for rate limiting operations
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    // Rate limiting: Check user's recent requests
+    const { data: rateLimitData } = await supabaseAdmin
+      .from('user_rate_limits')
+      .select('request_count, window_start')
+      .eq('user_id', userData.user.id)
+      .single();
+
+    const now = new Date();
+    const windowDuration = 60 * 1000; // 1 minute window
+    // Adjust based on provider: OpenAI is more generous than Gemini
+    const maxRequests = AI_PROVIDER === 'gemini' ? 5 : 20; // Gemini: 5/min, OpenAI: 20/min
+
+    if (rateLimitData) {
+      const windowStart = new Date(rateLimitData.window_start);
+      const windowAge = now.getTime() - windowStart.getTime();
+
+      if (windowAge < windowDuration) {
+        // Within current window
+        if (rateLimitData.request_count >= maxRequests) {
+          const resetTime = Math.ceil((windowDuration - windowAge) / 1000);
+          return new Response(
+            JSON.stringify({ 
+              error: `Rate limit exceeded. Please wait ${resetTime} seconds before trying again.` 
+            }), {
+              status: 429,
+              headers: { 
+                ...corsHeaders, 
+                'Content-Type': 'application/json',
+                'Retry-After': resetTime.toString()
+              },
+            }
+          );
+        }
+        // Increment counter
+        await supabaseAdmin
+          .from('user_rate_limits')
+          .update({ 
+            request_count: rateLimitData.request_count + 1 
+          })
+          .eq('user_id', userData.user.id);
+      } else {
+        // Start new window
+        await supabaseAdmin
+          .from('user_rate_limits')
+          .update({ 
+            request_count: 1,
+            window_start: now.toISOString()
+          })
+          .eq('user_id', userData.user.id);
+      }
+    } else {
+      // First request, create rate limit record
+      await supabaseAdmin
+        .from('user_rate_limits')
+        .insert({
+          user_id: userData.user.id,
+          request_count: 1,
+          window_start: now.toISOString()
+        });
+    }
+
     const { messages, agent } = await req.json();
 
     // Validate agent type
@@ -154,9 +221,16 @@ serve(async (req) => {
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: 'Rate limits exceeded, please try again later.' }), {
+        // AI provider rate limit - suggest longer wait time
+        return new Response(JSON.stringify({ 
+          error: 'AI provider rate limit exceeded. Please wait 60 seconds and try again.' 
+        }), {
           status: 429,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json',
+            'Retry-After': '60' // Suggest 60 second wait for provider limits
+          },
         });
       }
       if (response.status === 402) {
