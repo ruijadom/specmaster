@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Valid phase types
-const VALID_PHASE_TYPES = ['project-brief', 'prd', 'architecture', 'backlog'];
+const VALID_PHASE_TYPES = ['project-brief', 'prd', 'ux-spec', 'architecture', 'backlog'];
 
 // UUID validation regex
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -134,6 +134,16 @@ serve(async (req) => {
   "success_metrics": "string",
   "roadmap": "string"
 }`,
+      'ux-spec': `You are a UX Designer. Analyze the conversation and extract a structured UX specification in JSON format with these fields:
+{
+  "design_principles": "string",
+  "user_flows": "string (detailed user journey maps)",
+  "wireframes_description": "string",
+  "interaction_patterns": "string",
+  "accessibility_requirements": "string",
+  "design_system": "string",
+  "usability_testing_plan": "string"
+}`,
       'architecture': `You are a Technical Architect. Analyze the conversation and extract a structured architecture document in JSON format with these fields:
 {
   "system_overview": "string",
@@ -166,6 +176,7 @@ serve(async (req) => {
     const phaseMarkers: Record<string, string[]> = {
       'project-brief': ['Project Brief:', 'Sumário Executivo', 'Objetivos de Negócio', 'AAVANCA'],
       'prd': ['Product Requirements', 'PRD', 'Functional Requirements', 'User Stories'],
+      'ux-spec': ['UX Specification', 'User Flow', 'Wireframe', 'Design System', 'Interaction', 'Accessibility'],
       'architecture': ['Architecture', 'Technology Stack', 'System Design', 'Data Model'],
       'backlog': ['Backlog', 'Sprint', 'User Stories', 'Story Points']
     };
