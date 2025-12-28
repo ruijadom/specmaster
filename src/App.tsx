@@ -16,6 +16,7 @@ import MissionControl from "./components/MissionControl";
 import Waitlist from "./pages/Waitlist";
 import Pricing from "./pages/Pricing";
 import Account from "./pages/Account";
+import Documentation from "./pages/Documentation";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/mission-control/:projectId" element={<MissionControl />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/account" element={<Account />} />
+              <Route path="/docs" element={<Documentation />} />
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

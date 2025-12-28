@@ -8,6 +8,7 @@ import {
   LogOut,
   Monitor,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
@@ -49,6 +50,7 @@ interface UserProfile {
 
 const menuItems = [
   { title: "Projects", url: "/projects", icon: FolderKanban },
+  { title: "Documentation", url: "/docs", icon: BookOpen },
   { title: "Account", url: "/account", icon: UserCircle },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
