@@ -7,6 +7,7 @@ import {
   Sun, 
   LogOut,
   Monitor,
+  Sparkles,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
@@ -108,15 +109,15 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       {/* Header with Logo */}
-      <SidebarHeader className="h-14 border-b border-sidebar-border flex items-center">
+      <SidebarHeader className="h-14 border-b border-sidebar-border flex justify-center items-center">
         <div className="flex items-center justify-between px-2 w-full">
           <button
             onClick={() => navigate("/projects")}
             className="flex items-center"
           >
             <span className={cn(
-              "font-bold text-brand-gradient",
-              isCollapsed ? "text-sm" : "text-lg"
+              "font-bold text-brand-gradient text-lg",
+              isCollapsed ? "-ml-1" : "ml-0"
             )}>
               {isCollapsed ? "sm" : "specmaster"}
             </span>

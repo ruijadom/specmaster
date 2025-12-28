@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { AI_PROVIDER, getProviderConfig } from "../_shared/ai-config.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -83,13 +84,16 @@ serve(async (req) => {
       }
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+    // Get provider configuration
+    const providerConfig = getProviderConfig(AI_PROVIDER);
+    const apiKey = Deno.env.get(providerConfig.secretKey);
+    
+    if (!apiKey) {
+      throw new Error(`${providerConfig.secretKey} is not configured for provider: ${AI_PROVIDER}`);
     }
 
     // Authenticate user if auth header is present
@@ -298,21 +302,47 @@ serve(async (req) => {
       ? `Based on this conversation, generate the documentation with these specific instructions: ${custom_prompt}\n\nConversation:\n\n${messages.map((m: any) => `${m.role}: ${m.content}`).join('\n\n')}`
       : `Based on this conversation, generate the documentation:\n\n${messages.map((m: any) => `${m.role}: ${m.content}`).join('\n\n')}`;
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompts[phase_type] || systemPrompts['project-brief'] },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-      }),
-    });
+    console.log(`Using AI provider: ${AI_PROVIDER}`);
+
+    let response;
+    if (AI_PROVIDER === 'gemini') {
+      // Gemini uses a different API format
+      response = await fetch(providerConfig.endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
+        },
+        body: JSON.stringify({
+          contents: [
+            { role: 'user', parts: [{ text: systemPrompts[phase_type] || systemPrompts['project-brief'] }] },
+            { role: 'user', parts: [{ text: userPrompt }] }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+          },
+        }),
+      });
+    } else {
+      // OpenAI and Lovable AI use the same format
+      response = await fetch(providerConfig.endpoint, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: providerConfig.model,
+          messages: [
+            { role: 'system', content: systemPrompts[phase_type] || systemPrompts['project-brief'] },
+            { role: 'user', content: userPrompt }
+          ],
+          temperature: 0.7,
+        }),
+      });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -324,7 +354,15 @@ serve(async (req) => {
     }
 
     const result = await response.json();
-    const content = result.choices[0].message.content;
+    let content;
+    
+    if (AI_PROVIDER === 'gemini') {
+      // Gemini response format
+      content = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    } else {
+      // OpenAI/Lovable format
+      content = result.choices[0].message.content;
+    }
     
     // Try to extract JSON from the response
     let structuredContent;

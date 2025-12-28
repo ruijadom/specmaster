@@ -25,7 +25,7 @@ import {
   ArrowLeft, Lightbulb, RefreshCw, ChevronDown, ChevronUp, 
   ArrowUp, ArrowDown, PanelLeft, MoreHorizontal, RotateCcw, 
   Download, Target, Users, Lock, AlertCircle, ArrowRight,
-  BarChart3, X, PanelRight, Crown, BookOpen
+  BarChart3, X, PanelRight, Crown, BookOpen, Moon, Star, Globe, Stars
 } from "lucide-react";
 import { useAgentChat, AgentType, Message } from "@/features/agents";
 import { MarkdownContent } from "@/components/MarkdownContent";
@@ -94,10 +94,10 @@ const phases: Phase[] = [{
 
 const AGENT_NAMES: Record<AgentType, string> = {
   ba: "Nova",
-  pm: "Max",
+  pm: "Orion",
   ux: "Luna",
-  architect: "Theo",
-  sm: "Sage"
+  architect: "Atlas",
+  sm: "Vega"
 };
 
 const AGENT_ROLES: Record<AgentType, string> = {
@@ -110,10 +110,18 @@ const AGENT_ROLES: Record<AgentType, string> = {
 
 const AGENT_INITIALS: Record<AgentType, string> = {
   ba: "NO",
-  pm: "MX",
+  pm: "OR",
   ux: "LU",
-  architect: "TH",
-  sm: "SG"
+  architect: "AT",
+  sm: "VE"
+};
+
+const AGENT_ICONS: Record<AgentType, React.ComponentType<{ className?: string }>> = {
+  ba: Sparkles,      // Nova - Supernova explosion
+  pm: Star,          // Orion - Constellation star
+  ux: Moon,          // Luna - Moon
+  architect: Globe,  // Atlas - World/structure bearer
+  sm: Stars          // Vega - Guiding stars
 };
 
 const PHASE_DOCUMENT_NAMES: Record<AgentType, string> = {
@@ -651,6 +659,7 @@ const MissionControl = () => {
       });
       return;
     }
+
     const phaseTypeMap: Record<AgentType, string> = {
       'ba': 'project-brief',
       'pm': 'prd',
@@ -658,6 +667,7 @@ const MissionControl = () => {
       'architect': 'architecture',
       'sm': 'backlog'
     };
+
     const phaseType = phaseTypeMap[currentAgent];
     try {
       setIsSavingDoc(true);
@@ -858,9 +868,7 @@ const MissionControl = () => {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            
-            <div className="h-4 w-px bg-border flex-shrink-0" />
-            
+                                    
             <NavTitle 
               title={projectName || "Your Project"} 
               description={`${phases.find(p => p.agent === currentAgent || p.subPhases?.some(sp => sp.agent === currentAgent))?.name || "Ideation"} • Mission Control`}
@@ -1188,7 +1196,10 @@ const MissionControl = () => {
                       boxShadow: `0 4px 12px ${getAgentColor(currentAgent)}40`
                     }}
                   >
-                    {AGENT_INITIALS[currentAgent]}
+                    {(() => {
+                      const IconComponent = AGENT_ICONS[currentAgent];
+                      return <IconComponent className="w-4 h-4" />;
+                    })()}
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-baseline gap-2">
@@ -1229,7 +1240,10 @@ const MissionControl = () => {
                             boxShadow: `0 4px 12px ${getAgentColor(currentAgent)}40`
                           }}
                         >
-                          {AGENT_INITIALS[currentAgent]}
+                          {(() => {
+                            const IconComponent = AGENT_ICONS[currentAgent];
+                            return <IconComponent className="w-4 h-4" />;
+                          })()}
                         </div>
                         <div className="space-y-2 min-w-0 flex-1">
                           <div className="flex items-baseline gap-2">
@@ -1278,7 +1292,10 @@ const MissionControl = () => {
                       boxShadow: `0 4px 12px ${getAgentColor(currentAgent)}40`
                     }}
                   >
-                    {AGENT_INITIALS[currentAgent]}
+                    {(() => {
+                      const IconComponent = AGENT_ICONS[currentAgent];
+                      return <IconComponent className="w-4 h-4" />;
+                    })()}
                   </div>
                   <div className="bg-muted/50 rounded-lg p-3">
                     <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
@@ -1361,9 +1378,6 @@ const MissionControl = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="text-center mt-2">
-                <p className="text-[10px] text-muted-foreground">AI can make mistakes. Verify important info.</p>
               </div>
             </div>
           </main>
