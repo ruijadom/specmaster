@@ -17,6 +17,7 @@ import Waitlist from "./pages/Waitlist";
 import Pricing from "./pages/Pricing";
 import Account from "./pages/Account";
 import Documentation from "./pages/Documentation";
+import ConfirmEmail from "./pages/ConfirmEmail";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/confirm-email" element={<ConfirmEmail />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/project-documents/:projectId" element={<ProjectDocuments />} />

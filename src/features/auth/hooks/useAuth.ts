@@ -33,7 +33,7 @@ export const useAuth = (): UseAuthReturn => {
     try {
       await authRequests.signIn(email, password);
       toast.success("Successfully signed in!");
-      navigate("/");
+      navigate("/projects");
     } catch (error: any) {
       toast.error(error.message || "Failed to sign in");
       throw error;
@@ -78,7 +78,7 @@ export const useAuth = (): UseAuthReturn => {
     try {
       await authRequests.resetPassword(newPassword);
       toast.success("Password updated successfully!");
-      navigate("/");
+      navigate("/projects");
       return { error: null };
     } catch (error: any) {
       toast.error(error.message || "Failed to update password");
