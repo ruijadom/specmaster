@@ -38,7 +38,7 @@ const Hero = () => {
           
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-12 font-light">
-            Orchestrate autonomous AI agents to generate complete project documentation—from hazy vision to actionable backlog in minutes.
+            Orchestrate autonomous AI agents to generate complete project documentation from hazy vision to actionable backlog in minutes.
           </p>
           
           {/* CTA buttons */}
