@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { 
-  Sparkles, 
-  CheckCircle2, 
+import {
+  Sparkles,
+  CheckCircle2,
   Users,
   Infinity,
   BrainCircuit,
@@ -19,9 +19,8 @@ import {
   Heart
 } from "lucide-react";
 
-// Launch date - adjust as needed
-// Calculate 35 days from now
-const LAUNCH_DATE = new Date(Date.now() + 35 * 24 * 60 * 60 * 1000);
+// Launch date - March 1, 2026
+const LAUNCH_DATE = new Date('2026-03-01T00:00:00');
 
 const useCountdown = (targetDate: Date) => {
   const [timeLeft, setTimeLeft] = useState({
@@ -34,7 +33,7 @@ const useCountdown = (targetDate: Date) => {
   useEffect(() => {
     const calculateTimeLeft = () => {
       const difference = targetDate.getTime() - new Date().getTime();
-      
+
       if (difference > 0) {
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -138,7 +137,7 @@ const Waitlist = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email) {
       toast({
         title: "Email required",
@@ -227,10 +226,10 @@ const Waitlist = () => {
       <WaitlistNavbar />
 
       <main className="relative z-10 flex flex-col items-center w-full pt-32 pb-20">
-        
+
         {/* Hero Section */}
         <div className="w-full px-6 max-w-4xl mx-auto text-center flex flex-col items-center">
-          
+
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-8 hover:bg-primary/15 transition-colors cursor-default opacity-0 animate-fade-in-up" style={{ animationDelay: '0ms' }}>
             <Sparkles className="w-3 h-3" />
@@ -262,7 +261,7 @@ const Waitlist = () => {
           <div className="w-full max-w-md mx-auto mb-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
             {!isSuccess ? (
               <>
-                <form 
+                <form
                   onSubmit={handleSubmit}
                   className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-xl border border-border focus-within:border-primary/50 transition-colors shadow-lg shadow-primary/5"
                 >
@@ -274,8 +273,8 @@ const Waitlist = () => {
                     className="flex-1 bg-transparent border-none text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-4 py-2 text-sm h-10"
                     disabled={isLoading}
                   />
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="btn-shine whitespace-nowrap px-6 py-2.5 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20 h-10"
                     disabled={isLoading}
                   >
@@ -357,7 +356,7 @@ const Waitlist = () => {
           <div className="relative rounded-3xl bg-card border border-border/50 p-12 text-center overflow-hidden">
             {/* Background Glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/10 blur-[100px] rounded-full pointer-events-none" />
-            
+
             <div className="relative z-10 flex flex-col items-center">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-6">
                 <Users className="w-3 h-3" />
@@ -367,13 +366,13 @@ const Waitlist = () => {
               <h2 className="text-3xl md:text-5xl font-semibold text-foreground tracking-tight mb-6">
                 Ready to Transform Your Workflow?
               </h2>
-              
+
               <p className="text-muted-foreground max-w-xl mx-auto mb-10 text-lg">
                 Don't miss the opportunity to be among the first to experience the future of project specification.
               </p>
 
               {!isSuccess && (
-                <Button 
+                <Button
                   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   className="btn-shine px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors flex items-center gap-2 text-lg shadow-xl shadow-primary/20 h-12"
                 >
@@ -393,7 +392,7 @@ const Waitlist = () => {
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold text-foreground">spec<span className="text-primary">master</span></span>
           </div>
-          
+
           <span className="text-xs text-muted-foreground/60">© 2025 Specmaster. All rights reserved.</span>
         </div>
       </footer>
