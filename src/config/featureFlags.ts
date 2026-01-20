@@ -5,5 +5,5 @@
 export const FEATURE_FLAGS = {
   // When false: shows only waitlist at /
   // When true: shows full app with all routes
-  LAUNCH_MODE: true,
+  LAUNCH_MODE: false,
 } as const;
